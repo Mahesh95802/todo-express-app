@@ -1,28 +1,28 @@
 const taskService = require('../services/task')
 
-const getTasks = (req, res) => {
+const getTasks = async (req, res) => {
     console.log("/tasks controller is called")
-    res.send(taskService.getTasks())
+    res.send(await taskService.getTasks())
 }
 
-const getTask = (req, res) => {
+const getTask = async (req, res) => {
     console.log("/tasks/:id controller is called")
-    res.send(taskService.getTask(req.params.id))
+    res.send(await taskService.getTask(req.params.id))
 }
 
-const postTask = (req, res) => {
+const postTask = async (req, res) => {
     console.log("POST /tasks/ controller is called")
-    res.send(taskService.postTask(req.body.name))
+    res.send(await taskService.postTask(req.body.name))
 }
 
-const completeTask = (req, res) => {
+const completeTask = async (req, res) => {
     console.log("PATCH /tasks/:id controller is called")
-    res.send(taskService.completeTask(req.params.id))
+    res.send(await taskService.completeTask(req.params.id))
 }
 
-const deleteTasks = (req, res) => {
+const deleteTasks = async (req, res) => {
     console.log("DELETE /tasks/ controller is called")
-    res.send(taskService.deleteTasks(req.query.isComplete))
+    res.send(await taskService.deleteTasks(req.query.isComplete))
 }
 
 module.exports = { getTasks, getTask, postTask, completeTask, deleteTasks }

@@ -1,40 +1,40 @@
+const { Task } = require('../models')
 const { findIndexById } = require('../utils/arrayUtils')
 
-const getTasks = () => {
-    console.log("GET /tasks/ service is called")
-    return global.db
+const getTasks = async () => {
+    console.log("GET /tasks service is called")
+    const tasks = await Task.findAll();
+    // console.log(tasks.every(task => task instanceof Task))
+    return tasks
 }
 
-const getTask = (id) => {
+const getTask = async (id) => {
     console.log("GET /tasks/:id service is called")
-    const requestTaskId = findIndexById(id)
-    return global.db[requestTaskId]
+    return await Task.findOne({ where: { id: id } })
 }
 
-const postTask = (name) => {
+const postTask = async (name) => {
     console.log("POST /tasks/ service is called")
-    task = {
-        id: global.id,
-        isComplete: false,
+    const task = {
         name,
+        isComplete: false,
     }
-    global.id += 1
-    global.db.push(task)
-    return task
+    return await Task.create(task)
 }
 
-const completeTask = (id) => {
+const completeTask = async (id) => {
     console.log("PATCH /tasks/:id service is called")
-    const requestTaskId = findIndexById(id)
-    global.db[requestTaskId].isComplete = true
-    return global.db[requestTaskId]
+    const [updatedField, updateObjects] = await Task.update({ isComplete: true }, { where: { id: id }, returning: true })
+    return updateObjects
 }
 
-const deleteTasks = (isComplete) => {
+const deleteTasks = async (isComplete) => {
     console.log("DELETE /tasks/ service is called")
-    const initialLength = db.length
-    isComplete === "true" ? global.db.splice(0, global.db.length, ...global.db.filter((task) => task.isComplete !== true)) : global.db.splice(0, global.db.length)
-    return `Deleted ${initialLength - global.db.length} element(s)`
+    // const initialLength = db.length
+    // isComplete === "true" ? global.db.splice(0, global.db.length, ...global.db.filter((task) => task.isComplete !== true)) : global.db.splice(0, global.db.length)
+    // return `Deleted ${initialLength - global.db.length} element(s)`
+    const deleted = isComplete === 'true' ? await Task.destroy({ where: { isComplete: true } }) : await Task.destroy({ where: {} })
+    return deleted
 }
 
 module.exports = { getTasks, getTask, postTask, completeTask, deleteTasks }
